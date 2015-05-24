@@ -57,7 +57,7 @@ please see demoe http://127.0.0.1:8080/demo/action
 							state : 503,
 							errorType : errorType,
 							message : error || errorMsg,
-							action : "error"
+							action : "system"
 						};
 					}
 					me._action(data);
@@ -101,6 +101,9 @@ please see demoe http://127.0.0.1:8080/demo/action
 			msg=msg.replace(/<br\/>/ig,"\n")
 			alert(msg);
 			message&&$.evalData(this.data);
+		},
+		system:function(){
+			this.warn();
 		},
 		info : function() {
 			this._alert();
@@ -172,7 +175,13 @@ please see demoe http://127.0.0.1:8080/demo/action
 
 	$(function() {
 		$(".action-ajax-load").each(function() {
-			$(this).ajaxAction();
+			$(this).ajaxAction({
+				actions:{
+					system:function(){
+						console&&console.log&&console.log("action-ajax-load error");
+					}
+				}
+			});
 		});
 		$("body").on(tap_click, ".action-ajax-click", function(e) {
 			// e.preventDefault();

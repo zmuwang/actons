@@ -102,8 +102,7 @@ please see demoe http://127.0.0.1:8080/demo/action
 							}
 						},
 						ajaxOpts:{
-							url:me.data,
-							dataType:null
+							url:me.data
 						}
 					});
 				}
