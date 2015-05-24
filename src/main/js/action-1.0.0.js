@@ -12,6 +12,12 @@ please see demoe http://127.0.0.1:8080/demo/action
 	$.evalData=function(data){
 		if(!data)return;
 		try{return window.eval(data);}catch(e){};
+	};
+	$.isCrossDomain=function(url){
+		if(!/^((http|https)?:)?\/\//.test(url))return false
+		var lc=window.location,h=lc.protocol+"//"+lc.host+"/";
+		if(url.startsWith("//"))url=lc.protocol+url;
+		return !url.startsWith(h);
 	}
 	$.fn.ajaxAction.defaultOpts = {};
 
@@ -28,13 +34,14 @@ please see demoe http://127.0.0.1:8080/demo/action
 			var me = this;
 			me.element = element;
 			me.opts = $.extend({}, $.fn.ajaxAction.defaultOpts, options);
+			$.extend(me,me.opts.actions||{});
 			me._ajax();
 		},
 		_ajax : function() {
 			var me = this, ajaxOpts = {
 				type : me.element.attr("method") || "GET",
-				dataType : "jsonp",
 				jsonp : "_callback",
+				cache:false,
 				url : me.element.attr("data-url")
 						|| me.element.attr("href")
 						|| me.element.attr("action"),
@@ -43,11 +50,9 @@ please see demoe http://127.0.0.1:8080/demo/action
 				},
 				error : function(xhr, errorType, error) {
 					var data = "";
-					if (errorType == "parsererror" && xhr.status == "200"
-							&& xhr.statusText == "OK"
-							&& xhr.responseText != "") {
-						data = xhr.responseText;
-					} else {
+	                if(errorType =="parsererror" && xhr.status=="200" &&xhr.statusText=="OK"&&xhr.responseText!=""){
+	                    data = xhr.responseText;
+	                }else {
 						data = {
 							state : 503,
 							errorType : errorType,
@@ -59,10 +64,14 @@ please see demoe http://127.0.0.1:8080/demo/action
 				}
 			};
 			ajaxOpts = $.extend(ajaxOpts, me.opts.ajaxOpts);
-			if(ajaxOpts.type!="GET")ajaxOpts.dataType="json";
-			if (!ajaxOpts.url || me.element.data(data_loading)
+			var url=ajaxOpts.url;
+			if(ajaxOpts.type!="GET")ajaxOpts.dataType=null;
+			if (!url || me.element.data(data_loading)
 					|| me.element.hasClass("action-ajax-disable")||$.evalData(me.element.attr("data-action-call-before"))===false)
 				return;
+			if($.isCrossDomain(url)){
+				ajaxOpts.dataType="jsonp";
+			}
 			me.element.data(data_loading, true);
 			$.ajax(ajaxOpts);
 		},
@@ -85,7 +94,7 @@ please see demoe http://127.0.0.1:8080/demo/action
 			}
 			$.extend(me, data);
 			me[me.action].call(me);
-			callback && eval(callback);
+			callback && $.evalData(callback);
 		},
 		_alert : function(message) {
 			var msg=message||this.message;
@@ -142,12 +151,6 @@ please see demoe http://127.0.0.1:8080/demo/action
 		topRefresh : function() {
 			top.location.reload();
 		},
-		popWin : function() {
-
-		},
-		openIframe : function() {
-
-		},
 		render : function() {
 			var me = this;
 			$.each(me.data, function() {
@@ -161,6 +164,9 @@ please see demoe http://127.0.0.1:8080/demo/action
 		},
 		string : function() {
 			this.html();
+		},
+		eval:function(){
+			$.evalData(this.data);
 		}
 	});
 
