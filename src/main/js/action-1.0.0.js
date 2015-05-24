@@ -11,7 +11,7 @@ please see demoe http://127.0.0.1:8080/demo/action
 	}
 	$.evalData=function(data){
 		if(!data)return;
-		try{window.eval(data);}catch(e){};
+		try{return window.eval(data);}catch(e){};
 	}
 	$.fn.ajaxAction.defaultOpts = {};
 
@@ -59,8 +59,9 @@ please see demoe http://127.0.0.1:8080/demo/action
 				}
 			};
 			ajaxOpts = $.extend(ajaxOpts, me.opts.ajaxOpts);
+			if(ajaxOpts.type!="GET")ajaxOpts.dataType="json";
 			if (!ajaxOpts.url || me.element.data(data_loading)
-					|| me.element.hasClass("action-ajax-disable"))
+					|| me.element.hasClass("action-ajax-disable")||$.evalData(me.element.attr("data-action-call-before"))===false)
 				return;
 			me.element.data(data_loading, true);
 			$.ajax(ajaxOpts);
@@ -78,23 +79,28 @@ please see demoe http://127.0.0.1:8080/demo/action
 			if (typeof data == "undefined" || !data.action
 					|| !me[data.action])
 				return;
+			//form 
+			if(["warn","error"].indexOf(data.action)>=0&&me.element[0].tagName=="FORM"&&me.element.find(".action-fileds-errors").length){
+				data={action:"filedsError",data:[{name:"action-fileds-errors",message:data.message||data.data}]};
+			}
 			$.extend(me, data);
 			me[me.action].call(me);
 			callback && eval(callback);
 		},
 		_alert : function(message) {
-			alert(message);
+			var msg=message||this.message;
+			msg=msg.replace(/<br\/>/ig,"\n")
+			alert(msg);
+			message&&$.evalData(this.data);
 		},
 		info : function() {
-			this.error();
+			this._alert();
 		},
 		warn : function() {
-			this.error();
+			this._alert();
 		},
 		error : function() {
-			var message = this.message || errorMsg;
-			alert(message);
-			$.evalData(this.data);
+			this._alert();
 		},
 		confirm:function(){
 			var message = this.message || errorMsg;
@@ -117,7 +123,7 @@ please see demoe http://127.0.0.1:8080/demo/action
 			} else {
 				var msg = "";
 				$.each(me.data, function() {
-					msg = msg + this.message + "\n";
+					msg = msg + this.message + "<br/>";
 				});
 				this._alert(msg);
 			}

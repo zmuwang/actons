@@ -61,14 +61,15 @@ please see demoe http://127.0.0.1:8080/demo/action
 					var me=this,msg = me.message || errorMsg,container = $("body"), dialog = $('<div class="action-info-dialog" style="position:absolute"><div class="action-info-dialog-body"></div></div>'), infoBody = dialog
 							.find(".action-info-dialog-body");
 					infoBody.html(msg);
-					dialog.appendTo(container).css(buildPosition(dialog,container)).show(2000,function(){
+					dialog.appendTo(container).css(buildPosition(dialog,container)).css({opacity:0}).animate({opacity:1},2000,function(){
 							dialog.hide().remove();
 							$.evalData(me.data);
 						});
 				},
-				warn:function(){
-					var message = this.message || errorMsg;
-					new dialog({message:message,data:this.data});
+				_alert:function(message){
+					var param={message:message||this.message};
+					if(!message)param.data=this.data;
+					new dialog(param);
 				},
 				error : function() {
 					this.warn();
