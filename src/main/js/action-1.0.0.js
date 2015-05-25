@@ -179,6 +179,9 @@ please see demoe http://127.0.0.1:8080/demo/action
 				system:function(){
 					console&&console.log&&console.log("action-ajax-load error");
 				}
+			},
+			ajaxOpts : {
+				url : url
 			}
 		});
 	};
