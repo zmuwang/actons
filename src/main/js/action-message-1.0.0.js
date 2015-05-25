@@ -34,6 +34,9 @@ please see demoe http://127.0.0.1:8080/demo/action
 			showBtnClose:false
 		},
 		_init:function(opts){
+			if(typeof opts=="string"){
+				opts={message:opts};
+			}
 			this.opts=$.extend({},this._opts,opts);
 			this.container=$(this.opts.containerTpl);
 			this.show();
@@ -64,6 +67,9 @@ please see demoe http://127.0.0.1:8080/demo/action
 			me.mask.remove();
 		}
 	});
+	$.actionDialog=function(opts){
+		return new dialog(opts);
+	};
 	$.extendAction({
 				info : function() {
 					var me=this,msg = me.message || errorMsg,container = $("body"), dialog = $('<div class="action-dialog-info" style="position:absolute"><div class="action-dialog-info-body"></div></div>'), infoBody = dialog
@@ -77,14 +83,14 @@ please see demoe http://127.0.0.1:8080/demo/action
 				_alert:function(message){
 					var param={message:message||this.message};
 					if(!message)param.data=this.data;
-					new dialog(param);
+					$.actionDialog(param);
 				},
 				error : function() {
 					this.warn();
 				},
 				confirm:function(){
 					var message = this.message || errorMsg;
-					new dialog({message:message,data:this.data,showBtnCancel:true});
+					$.actionDialog({message:message,data:this.data,showBtnCancel:true});
 				},
 				popHtmlFragment : function() {
 					new dialog({bodyTpl:this.data,showBtnOk:false,showBtnClose:true});
