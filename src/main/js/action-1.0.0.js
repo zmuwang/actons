@@ -183,7 +183,7 @@ please see demoe http://127.0.0.1:8080/demo/action
 				}
 			});
 		});
-		$("body").on(tap_click, ".action-ajax-click", function(e) {
+		$("body").on(tap_click, ".action-ajax-btn", function(e) {
 			// e.preventDefault();
 			$(this).ajaxAction();
 			return false;
