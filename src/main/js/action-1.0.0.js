@@ -188,8 +188,12 @@ please see demoe http://127.0.0.1:8080/demo/action
 	
 	$(function() {
 		$(".action-ajax-load").each(function() {
-			var me=$(this),url=me.attr("data-url");;
+			var me=$(this),url=me.attr("data-url"),t=me.attr("data-action-ajax-load-interval");
 			$.ajaxActionLoad(url,me);
+			if(!t)return;
+			window.setInterval(function() {
+				$.ajaxActionLoad(url,me);
+			},t*1);
 		});
 		$("body").on(tap_click, ".action-ajax-btn", function(e) {
 			// e.preventDefault();
