@@ -185,6 +185,19 @@ please see demoe http://127.0.0.1:8080/demo/action
 			}
 		});
 	};
+	$.fn.ajaxActionForm=function(){
+		return this.each(function(){
+			var form = $(this);
+			form.find(".action-fileds-errors").empty();
+			form.find(".action-filed-error").empty();
+			// e.preventDefault();
+			form.ajaxAction({
+				ajaxOpts : {
+					data : form.serialize()
+				}
+			});
+		});
+	};
 	
 	$(function() {
 		$(".action-ajax-load").each(function() {
@@ -201,15 +214,11 @@ please see demoe http://127.0.0.1:8080/demo/action
 			return false;
 		});
 		$("body").on("submit", ".action-ajax-form", function(e) {
-			var form = $(this);
-			form.find(".action-fileds-errors").empty();
-			form.find(".action-filed-error").empty();
-			// e.preventDefault();
-			form.ajaxAction({
-				ajaxOpts : {
-					data : form.serialize()
-				}
-			});
+			//e.preventDefault();
+			if($.actionValid&&!$.actionValid(this)){
+				return false;
+			}
+			$(this).ajaxActionForm();
 			return false;
 		});
 	});
