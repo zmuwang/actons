@@ -5,10 +5,10 @@ please see demoe http://127.0.0.1:8080/demo/action
 (function($) {
 	var zindex=10000,tap_click = ("createTouch" in document) ? 'tap' : 'click';
 	function buildPosition(dialog,container){
-		var dtop=document.body.scrollTop,left = Math.floor(container.width() / 2 - dialog.width()
+		var dtop=window.pageYOffset,left = Math.floor(container.width() / 2 - dialog.width()
 				/ 2), top =  Math.floor(dtop+$(window).height()/2-dialog.height()/2);
 		if(left<0)top=0;
-		if(top<dtop)top=dtopdtop;
+		if(top<dtop)top=dtop;
 		return {
 			top : top,
 			left : left,
