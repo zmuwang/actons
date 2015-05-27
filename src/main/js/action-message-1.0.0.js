@@ -24,11 +24,12 @@ please see demoe http://127.0.0.1:8080/demo/action
 			dialogTpl:'<div class="action-dialog-model" style="position:absolute"/>',
 			bodyTpl:'<div class="action-dialog-model-body"/>',
 			btnsTpl:'<div class="action-dialog-model-btns"/>',
-			btnTpl:'<button class="action-dialog-model-btn"/>',
+			btnTpl:'<button class="action-dialog-model-btn action-dialog-model-close"/>',
 			closeTpl:'<div class="action-dialog-model-close"  style="display:block;position:absolute;top:0;right:0;">x</div>',
-			maskTpl:'<div style="display:block;width:100%;height:100%;background:#000;position:absolute;position:fixed;top:0;left:0;"/>',
+			maskTpl:'<div class="" style="display:block;width:100%;height:100%;background:#000;position:absolute;position:fixed;top:0;left:0;"/>',
 			btnOkTitle:"确认",
 			btnCancelTitle:"取消",
+			closeBtnSelect:".action-dialog-model-close",
 			showBtnOk:true,
 			showBtnCancel:false,
 			showBtnClose:false
@@ -48,15 +49,14 @@ please see demoe http://127.0.0.1:8080/demo/action
 			me.body=$(me.opts.bodyTpl).appendTo(me.dialog);
 			me.opts.message&&me.body.html(me.opts.message);
 			me.btns=$(me.opts.btnsTpl).appendTo(me.dialog);
-			me.opts.showBtnOk&&$(me.opts.btnTpl).appendTo(me.btns).html(me.opts.btnOkTitle).on($.tap_click,function(){
+			if(me.opts.showBtnOk){
+				me.btnOk=$(me.opts.btnTpl).appendTo(me.btns).html(me.opts.btnOkTitle);
+			}
+			me.opts.showBtnCancel&&$(me.opts.btnTpl).appendTo(me.btns).html(me.opts.btnCancelTitle);
+			me.opts.showBtnClose&&$(me.opts.closeTpl).appendTo(me.dialog);
+			me.dialog.on($.tap_click,me.opts.closeBtnSelect,function(){
 				me.close();
-				$.evalData(me.opts.data);
-			});
-			me.opts.showBtnCancel&&$(me.opts.btnTpl).appendTo(me.btns).html(me.opts.btnCancelTitle).on($.tap_click,function(){
-				me.close();
-			});
-			me.opts.showBtnClose&&$(me.opts.closeTpl).appendTo(me.dialog).on($.tap_click,function(){
-				me.close();
+				me.btnOk&&this==me.btnOk[0]&&$.evalData(me.opts.data);
 			});
 			if(!me.btns.html())me.btns.remove();
 			me.dialog.css(buildPosition(me.dialog,me.container)).show();
