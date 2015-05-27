@@ -16,8 +16,8 @@ please see demoe http://127.0.0.1:8080/demo/action
 	$.isCrossDomain=function(url){
 		if(!/^((http|https)?:)?\/\//.test(url))return false
 		var lc=window.location,h=lc.protocol+"//"+lc.host+"/";
-		if(url.startsWith("//"))url=lc.protocol+url;
-		return !url.startsWith(h);
+		if(url.indexOf("//")==0)url=lc.protocol+url;
+		return url.indexOf(h)!=0;
 	}
 	$.fn.ajaxAction.defaultOpts = {};
 
@@ -208,12 +208,12 @@ please see demoe http://127.0.0.1:8080/demo/action
 				$.ajaxActionLoad(url,me);
 			},t*1);
 		});
-		$("body").on(tap_click, ".action-ajax-btn", function(e) {
+		$(document).on(tap_click, ".action-ajax-btn", function(e) {
 			// e.preventDefault();
 			$(this).ajaxAction();
 			return false;
 		});
-		$("body").on("submit", ".action-ajax-form", function(e) {
+		$(document).on("submit", ".action-ajax-form", function(e) {
 			//e.preventDefault();
 			if($.actionValid&&!$.actionValid(this)){
 				return false;
