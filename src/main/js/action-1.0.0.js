@@ -3,7 +3,8 @@ please see demoe http://127.0.0.1:8080/demo/action
  */
 ;
 (function($) {
-	var tap_click = ("createTouch" in document) ? 'tap' : 'click', data_loading = "action-ajax-loading", errorMsg = "Server error";
+	///Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)
+	var tap_click =( 'createTouch' in document && !('onmousemove' in document.documentElement) )? 'tap' : 'click', data_loading = "action-ajax-loading", errorMsg = "Server error";
 	$.fn.ajaxAction = function(options) {
 		return this.each(function() {
 			new ajaxAction($(this), options);
