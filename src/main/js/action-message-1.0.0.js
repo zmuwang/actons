@@ -5,8 +5,8 @@ please see demoe http://127.0.0.1:8080/demo/action
 (function($) {
 	var zindex=10000;
 	function buildPosition(dialog,container){
-		var dtop=window.pageYOffset,left = Math.floor(container.width() / 2 - dialog.width()
-				/ 2), top =  Math.floor(dtop+$(window).height()/2-dialog.height()/2);
+		var w=$(window),dtop=w.scrollTop(),left = Math.floor(container.width() / 2 - dialog.width()
+				/ 2), top =  Math.floor(dtop+w.height()/2-dialog.height()/2);
 		if(left<0)top=0;
 		if(top<dtop)top=dtop;
 		return {
@@ -18,7 +18,13 @@ please see demoe http://127.0.0.1:8080/demo/action
 	function dialog(opts){
 		this._init(opts);
 	}
-	$.extend(dialog.prototype,{
+	$.actionDialog=function(opts){
+		return new dialog(opts);
+	};
+	$.actionDialog.extend=function(exts){
+		$.extend(dialog.prototype,exts);
+	};
+	$.actionDialog.extend({
 		_opts:{
 			containerTpl:'body',
 			dialogTpl:'<div class="action-dialog-model" style="position:absolute"/>',
@@ -46,7 +52,11 @@ please see demoe http://127.0.0.1:8080/demo/action
 			var me=this;
 			me.mask=$(me.opts.maskTpl).appendTo(me.container).css({zIndex:zindex++,opacity:0.2});
 			me.dialog=$(me.opts.dialogTpl).appendTo(me.container);
-			me.body=$(me.opts.bodyTpl).appendTo(me.dialog);
+			var bp=me.dialog;
+			while(bp.children().length==1){
+				bp=bp.children();
+			}
+			me.body=$(me.opts.bodyTpl).appendTo(bp);
 			me.opts.message&&me.body.html(me.opts.message);
 			me.btns=$(me.opts.btnsTpl).appendTo(me.dialog);
 			if(me.opts.showBtnOk){
@@ -67,9 +77,7 @@ please see demoe http://127.0.0.1:8080/demo/action
 			me.mask.remove();
 		}
 	});
-	$.actionDialog=function(opts){
-		return new dialog(opts);
-	};
+
 	$.extendAction({
 				info : function() {
 					var me=this,msg = me.message || errorMsg,container = $("body"), dialog = $('<div class="action-dialog-info" style="position:absolute"><div class="action-dialog-info-body"></div></div>'), infoBody = dialog
@@ -113,4 +121,31 @@ please see demoe http://127.0.0.1:8080/demo/action
 					});
 				}
 			});
+	$(function(){
+		$(document).on($.tap_click,".action-dialog-model-close-top",function(){
+			
+		})
+	});
+	/*
+	$(function(){
+		$.actionDialog.extend({
+			_opts:{
+				containerTpl:'body',
+				dialogTpl:'<div class="popup-wrapper popup-wrapper-type-1 ms-popup" id="popup-ms-share-all"  style="position:absolute"><div class="popup popup-normal popup-1 popup-share-all"></div></div>',
+				bodyTpl:'<div class="popup-content"/>',
+				btnsTpl:'<div class="popup-close-btn"/>',
+				btnTpl:' <a href="javascript:void(0)" class="btn btn-orange-line btn-sure action-dialog-model-btn action-dialog-model-close"/>',
+				closeTpl:'<a href="javascript:void(0)" class="close">×</a>',
+				maskTpl:'<div class="" style="display:block;width:100%;height:100%;background:#000;position:absolute;position:fixed;top:0;left:0;"/>',
+				btnOkTitle:"确认",
+				btnCancelTitle:"取消",
+				closeBtnSelect:".action-dialog-model-close",
+				showBtnOk:true,
+				showBtnCancel:false,
+				showBtnClose:false
+			}
+		});
+		
+	});
+	*/
 })($)
