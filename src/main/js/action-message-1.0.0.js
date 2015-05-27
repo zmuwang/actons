@@ -3,7 +3,7 @@ please see demoe http://127.0.0.1:8080/demo/action
  */
 ;
 (function($) {
-	var zindex=10000,tap_click = ("createTouch" in document) ? 'tap' : 'click';
+	var zindex=10000;
 	function buildPosition(dialog,container){
 		var dtop=window.pageYOffset,left = Math.floor(container.width() / 2 - dialog.width()
 				/ 2), top =  Math.floor(dtop+$(window).height()/2-dialog.height()/2);
@@ -48,14 +48,14 @@ please see demoe http://127.0.0.1:8080/demo/action
 			me.body=$(me.opts.bodyTpl).appendTo(me.dialog);
 			me.opts.message&&me.body.html(me.opts.message);
 			me.btns=$(me.opts.btnsTpl).appendTo(me.dialog);
-			me.opts.showBtnOk&&$(me.opts.btnTpl).appendTo(me.btns).html(me.opts.btnOkTitle).on(tap_click,function(){
+			me.opts.showBtnOk&&$(me.opts.btnTpl).appendTo(me.btns).html(me.opts.btnOkTitle).on($.tap_click,function(){
 				me.close();
 				$.evalData(me.opts.data);
 			});
-			me.opts.showBtnCancel&&$(me.opts.btnTpl).appendTo(me.btns).html(me.opts.btnCancelTitle).on(tap_click,function(){
+			me.opts.showBtnCancel&&$(me.opts.btnTpl).appendTo(me.btns).html(me.opts.btnCancelTitle).on($.tap_click,function(){
 				me.close();
 			});
-			me.opts.showBtnClose&&$(me.opts.closeTpl).appendTo(me.dialog).on(tap_click,function(){
+			me.opts.showBtnClose&&$(me.opts.closeTpl).appendTo(me.dialog).on($.tap_click,function(){
 				me.close();
 			});
 			if(!me.btns.html())me.btns.remove();

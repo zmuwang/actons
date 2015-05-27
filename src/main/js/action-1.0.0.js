@@ -3,8 +3,7 @@ please see demoe http://127.0.0.1:8080/demo/action
  */
 ;
 (function($) {
-	///Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)
-	var tap_click =( 'createTouch' in document && !('onmousemove' in document.documentElement) )? 'tap' : 'click', data_loading = "action-ajax-loading", errorMsg = "Server error";
+	var data_loading = "action-ajax-loading", errorMsg = "Server error";
 	$.fn.ajaxAction = function(options) {
 		return this.each(function() {
 			new ajaxAction($(this), options);
@@ -29,6 +28,7 @@ please see demoe http://127.0.0.1:8080/demo/action
 	$.extendAction = function(actions) {
 		$.extend(ajaxAction.prototype, actions);
 	};
+	$.tap_click=( 'createTouch' in document && !('onmousemove' in document.documentElement) )? 'tap' : 'click';
 
 	$.extendAction({
 		_init : function(element, options) {
@@ -209,7 +209,7 @@ please see demoe http://127.0.0.1:8080/demo/action
 				$.ajaxActionLoad(url,me);
 			},t*1);
 		});
-		$(document).on(tap_click, ".action-ajax-btn", function(e) {
+		$(document).on($.tap_click, ".action-ajax-btn", function(e) {
 			// e.preventDefault();
 			$(this).ajaxAction();
 			return false;
