@@ -28,7 +28,7 @@ please see demoe http://127.0.0.1:8080/demo/action
 	$.extendAction = function(actions) {
 		$.extend(ajaxAction.prototype, actions);
 	};
-	$.tap_click=( 'createTouch' in document && !('onmousemove' in document.documentElement) )? 'tap' : 'click';
+	$.tap_click=( 'createTouch' in document  )? 'tap' : 'click';
 
 	$.extendAction({
 		_init : function(element, options) {
